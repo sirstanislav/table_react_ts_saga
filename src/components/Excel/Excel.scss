@@ -1,0 +1,22 @@
+.input__cell_dark {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.input__cell_light {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.input__cell_light-gray {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: rgba($color: #212529, $alpha: 0);
+}
+
+.input__cell_light-gray:focus {
+  background-color: rgba($color: #212529, $alpha: 0);
+}
