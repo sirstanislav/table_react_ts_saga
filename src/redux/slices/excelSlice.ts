@@ -1,7 +1,7 @@
 import uuid from 'react-uuid';
 import { RootState } from './index';
-import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { all, takeLatest, put, select, throttle, debounce } from 'redux-saga/effects';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { all, takeLatest, put, select } from 'redux-saga/effects';
 import {
   SET_COL,
   SET_ROW,
@@ -35,8 +35,26 @@ const initialState: IDataState = {
       id: uuid(),
       title: 'Name',
     },
+    {
+      id: uuid(),
+      title: 'Surname',
+    },
   ],
   rows: [
+    {
+      id: uuid(),
+      title: 'second row',
+      cells: [
+        {
+          id: uuid(),
+          title: 'Orazio',
+        },
+        {
+          id: uuid(),
+          title: 'Contorino',
+        },
+      ],
+    },
     {
       id: uuid(),
       title: 'first row',
@@ -44,6 +62,24 @@ const initialState: IDataState = {
         {
           id: uuid(),
           title: 'Stanislav',
+        },
+        {
+          id: uuid(),
+          title: 'Sorochan',
+        },
+      ],
+    },
+    {
+      id: uuid(),
+      title: 'third row',
+      cells: [
+        {
+          id: uuid(),
+          title: 'Nunzio',
+        },
+        {
+          id: uuid(),
+          title: 'Mio',
         },
       ],
     },
@@ -55,18 +91,33 @@ export const excelSlice = createSlice({
   initialState,
   reducers: {
     addCol(state = initialState, action) {
-      state.rows.map((item) => {
-        console.log("state.rows.forEach:", current(item))
-        return item.cells.push(
-          {
+      state.cols.forEach((col, index) => {
+        if (state.cols.at(-1) === col) {
+          state.cols.push({
             id: uuid(),
             title: ''
+          })
+          state.rows.map((item) => {
+            return item.cells.push(
+              {
+                id: uuid(),
+                title: ''
+              }
+            )
+          })
+        } else {
+          if (col.id === action.payload.id) {
+            return state.cols.splice(index + 1, 0, {
+              id: uuid(),
+              title: ''
+            }) && state.rows.map((row) => {
+              return row.cells.splice(index + 1, 0, {
+                id: uuid(),
+                title: ''
+              })
+            })
           }
-        )
-      })
-      state.cols.push({
-        id: action.payload.id,
-        title: ''
+        }
       })
       return state
     },
@@ -78,11 +129,23 @@ export const excelSlice = createSlice({
           title: '',
         })
       })
-
-      state.rows.push({
-        id: action.payload.id,
-        title: '',
-        cells: cellsForNewRow
+      state.rows.forEach((row, index) => {
+        if (state.rows.at(-1) === row) {
+          console.log("this one")
+          state.rows.push({
+            id: action.payload.id,
+            title: '',
+            cells: cellsForNewRow
+          })
+        } else {
+          if (row.id === action.payload.id) {
+            return state.rows.splice(index + 1, 0, {
+              id: uuid(),
+              title: '',
+              cells: cellsForNewRow
+            })
+          }
+        }
       })
       return state
     },
@@ -137,7 +200,7 @@ export function* excelSaga() {
     takeLatest(SET_COL, setCol),
     takeLatest(SET_ROW, setRow),
     takeLatest(SET_COL_NAME, setColTitle),
-    debounce(1000, SET_CELL_NAME, setCellTitle),
+    takeLatest(SET_CELL_NAME, setCellTitle),
   ])
 }
 

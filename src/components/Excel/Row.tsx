@@ -1,9 +1,10 @@
+import { Cell } from "./Cell";
 import uuid from "react-uuid";
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { IRowsType } from "../../redux/slices/excelSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { excelSliceAction } from "../../redux/slices/excelSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 interface IRowProps {
   row: IRowsType;
@@ -22,26 +23,12 @@ const Row: React.FunctionComponent<IRowProps> = ({ row, index }) => {
             type="button"
             className="px-1 py-0 position-absolute end-100 bi bi-plus-square button__cell"
             onClick={(e) => {
-              dispatch(excelSliceAction.addRow({ id: uuid() }));
+              dispatch(excelSliceAction.addRow({ id: row.id }));
             }}
           ></Button>
         </td>
         {row.cells.map((cell) => (
-          <td key={cell.id}>
-            <Form.Control
-              // value={cell.title}
-              as="textarea"
-              className="input__cell_light-gray overflow-auto"
-              onChange={(e) => {
-                dispatch(
-                  excelSliceAction.setCellTitle({
-                    title: e.target.value,
-                    id: cell.id,
-                  })
-                );
-              }}
-            />
-          </td>
+          <Cell key={cell.id} cell={cell} />
         ))}
       </tr>
     </>
