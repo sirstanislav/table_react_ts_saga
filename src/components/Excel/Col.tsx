@@ -32,7 +32,7 @@ const Col: React.FC<IColProps> = ({ col }) => {
           type="button"
           className="px-1 py-0 position-absolute bottom-50 start-100 translate-middle bi bi-plus-square"
           onClick={(e) => {
-            dispatch(excelSliceAction.addCol({ id: uuid() }));
+            dispatch(excelSliceAction.addCol({ id: col.id }));
           }}
         ></Button>
       </th>
