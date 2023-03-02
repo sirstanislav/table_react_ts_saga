@@ -13,8 +13,8 @@ const Excel: React.FunctionComponent<IExcelProps> = (props) => {
   const rowsArray = useAppSelector((state) => state.excelSlice.rows);
 
   return (
-    <Container className="p-0 pt-5">
-      <Table striped bordered hover>
+    <Container className="pt-5 px-5">
+      <Table striped bordered>
         <thead>
           <tr>
             <th>#</th>
